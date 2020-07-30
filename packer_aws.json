@@ -1,0 +1,37 @@
+{
+   "builders":[
+      {
+         "access_key":"key here",
+         "secret_key":"key here",
+         "region":"us-east-1",
+         "type":"amazon-ebs",
+         "ami_name":"packer-ami-{{timestamp}}",
+         "instance_type":"t3.micro",
+         "source_ami_filter":{
+            "filters":{
+               "virtualization-type":"hvm",
+               "name":"ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+               "root-device-type":"ebs"
+            },
+            "owners":[
+               "099720109477"
+            ],
+            "most_recent":true
+         },
+         "ssh_username":"ubuntu"
+      }
+   ],
+   "provisioners":[
+      {
+         "type":"shell",
+         "script":"ansible\\scripts\\ansible.sh"
+      },
+      {
+         "type":"ansible-local",
+         "playbook_file":"site.yml",
+         "role_paths":[
+            "ansible\\roles\\apache2"
+         ]
+      }
+   ]
+}
